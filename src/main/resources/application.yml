@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+spring:
+  main:
+
+    allow-bean-definition-overriding: true
+  application:
+    name: API-doan
+  datasource:
+    url: jdbc:postgresql://localhost:5432/web_booking_room
+    username: postgres
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+servlet:
+  thymeleaf:
+    cache: false
+    enabled: true
+minio:
+  bucket:
+    name: rent4u
+  access:
+    key: minioadmin
+    secret: minioadmin
+  url: http://127.0.0.1:9000
+secret: thangnaonhoduoccaichuoinaytaogoibangcuj2hjk23h4o23kejfn2pi3kj42kl3jfno2i3j2okn3f2oi3jro2i3j4
+jwtExpiration: 36000000
