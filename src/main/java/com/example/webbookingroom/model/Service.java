@@ -20,7 +20,7 @@ public class Service {
     @Column(name = "name")
     private String name;
     @ManyToOne
-    @JoinColumn(name = "service_id")
+    @JoinColumn(name = "location_id")
     private Location location;
     @Basic
     @Column(name = "type")

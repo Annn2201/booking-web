@@ -1,8 +1,10 @@
 package com.example.webbookingroom.config;
 
+import com.example.webbookingroom.exception.CustomException;
 import com.example.webbookingroom.model.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -48,6 +50,14 @@ public class JwtUtilities {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(Date.from(Instant.now().plus(jwtExpiration, ChronoUnit.MILLIS)))
                 .signWith(SignatureAlgorithm.HS256, secret).compact();
+    }
+    public String getUsername(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if(validateToken(authorizationHeader).equals(false)) {
+            throw new CustomException("Invalid token");
+        };
+        String token = authorizationHeader.substring(7);
+        return extractUsername(token);
     }
     public Boolean validateToken(String token) {
         try {

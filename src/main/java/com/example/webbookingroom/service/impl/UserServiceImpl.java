@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<?> getUserDetail(HttpServletRequest request) {
-        User user = userRepository.findByUsername(getUsername(request)).orElseThrow(() -> new CustomException("User not found"));
+        User user = userRepository.findByUsername(jwtUtil.getUsername(request)).orElseThrow(() -> new CustomException("User not found"));
         if (Objects.isNull(user)) {
             return new ResponseEntity<>("Không tìm thấy người dùng", HttpStatus.BAD_REQUEST);
         }
@@ -38,14 +38,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<?> updateUserDetail(HttpServletRequest request, UserDTO userDTO) {
-        User userUpdated = userRepository.findByUsername(getUsername(request)).orElseThrow(() -> new CustomException("User not found"));
+        User userUpdated = userRepository.findByUsername(jwtUtil.getUsername(request)).orElseThrow(() -> new CustomException("User not found"));
         BeanUtils.copyProperties(userDTO, userUpdated);
         userRepository.save(userUpdated);
         return ResponseEntity.ok("Update successfully");
     }
     @Override
     public ResponseEntity<?> changePassword(HttpServletRequest request, ChangePasswordDTO changePasswordDTO) {
-        User userUpdated = userRepository.findByUsername(getUsername(request)).orElseThrow(() -> new CustomException("User not found"));
+        User userUpdated = userRepository.findByUsername(jwtUtil.getUsername(request)).orElseThrow(() -> new CustomException("User not found"));
         if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), userUpdated.getPassword())) {
             throw new CustomException("Old password is not correct");
         }
@@ -53,12 +53,5 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok("Change password successfully");
     }
 
-    private String getUsername(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader("Authorization");
-        if(jwtUtil.validateToken(authorizationHeader).equals(false)) {
-            throw new CustomException("Invalid token");
-        };
-        String token = authorizationHeader.substring(7);
-        return jwtUtil.extractUsername(token);
-    }
+
 }

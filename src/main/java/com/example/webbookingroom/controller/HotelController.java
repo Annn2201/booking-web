@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HotelController {
     @GetMapping("/hotels")
     public ResponseEntity<?> findSuitableHotel() {
-
+        return ResponseEntity.ok("ok");
     }
 }

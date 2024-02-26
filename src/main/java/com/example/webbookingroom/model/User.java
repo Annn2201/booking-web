@@ -68,6 +68,10 @@ public class User implements Serializable, UserDetails {
             inverseJoinColumns = @JoinColumn(name = "hotel_id"))
     private List<Hotel> userHotelList = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "userVouchers")
+    private List<Voucher> userVouchers = new ArrayList<>();
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();

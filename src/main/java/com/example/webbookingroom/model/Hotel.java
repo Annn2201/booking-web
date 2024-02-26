@@ -42,6 +42,7 @@ public class Hotel {
     private Location location;
     @ManyToMany(mappedBy = "userHotelList")
     private List<User> users;
-
+    @OneToMany(mappedBy = "hotel")
+    private List<Voucher> vouchers;
 
 }
