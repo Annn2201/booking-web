@@ -1,6 +1,6 @@
 package com.example.webbookingroom.repository;
 
-import com.example.webbookingroom.dto.ChangePasswordDTO;
+import com.example.webbookingroom.model.Room;
 import com.example.webbookingroom.model.User;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @NotNull
     List<User> findAll();
 
-
+    List<User> findByUserRoom(List<Room> userRoom);
 }

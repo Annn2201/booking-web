@@ -11,6 +11,7 @@ import com.example.webbookingroom.repository.UserVoucherRepository;
 import com.example.webbookingroom.repository.VoucherRepository;
 import com.example.webbookingroom.service.VoucherService;
 import com.example.webbookingroom.util.PageUtil;
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class VoucherServiceImpl implements VoucherService {
     public ResponseEntity<?> findVouchers(int currentPage, String hotelName, HttpServletRequest request) {
         Specification<Voucher> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-            if (hotelName != null) {
+            if (StringUtils.isEmpty(hotelName)) {
                 predicates.add(criteriaBuilder.like(root.get("name"), "%" + hotelName + "%"));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
