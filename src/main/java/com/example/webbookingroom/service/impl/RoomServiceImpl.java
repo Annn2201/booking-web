@@ -7,6 +7,7 @@ import com.example.webbookingroom.model.Room;
 import com.example.webbookingroom.repository.HotelRepository;
 import com.example.webbookingroom.repository.RoomRepository;
 import com.example.webbookingroom.service.RoomService;
+import com.example.webbookingroom.util.PageUtil;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,8 +26,10 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
+    private static final int LIMIT = 5;
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
+
     @Override
     public ResponseEntity<?> createRoom(CreateRoomDto createRoomDto, Long hotelId) {
         Hotel hotel = hotelRepository.findById(hotelId)
@@ -46,21 +49,6 @@ public class RoomServiceImpl implements RoomService {
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new CustomException("Khách san không tìm thấy"));
         List<Room> roomListByHotel = roomRepository.findAllByHotel(hotel);
-        Specification<Room> spec = ((root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            if ()
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        });
-        Page<Room> rooms = roomRepository.findAll(spec, PageUtil.createPageable(currentPage, LIMIT, SORT));
-        String username = jwtUtilities.getUsername(request);
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new CustomException("User not found"));
-        List<UserRoom> userRooms = userRoomRepository.findByUserId(user.getId());
-        List<Long> userRoomIds = getUserRoomIds(userRooms);
-        List<Room> result = getRoomsAvailable(rooms, userRoomIds);
-        if (result.isEmpty()) {
-            return ResponseEntity.ok("Không có  được nào khả dụng");
-        }
-        List<RoomDTO> resultDTO = mapResultToDTO(userRooms, result);
-        return ResponseEntity.ok(resultDTO);
+        
     }
 }

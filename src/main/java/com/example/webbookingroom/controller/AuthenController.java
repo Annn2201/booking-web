@@ -1,9 +1,11 @@
 package com.example.webbookingroom.controller;
 
 import com.example.webbookingroom.config.JwtUtilities;
+import com.example.webbookingroom.dto.CoRegisterDTO;
 import com.example.webbookingroom.dto.LoginDTO;
 import com.example.webbookingroom.dto.RegisterDTO;
 import com.example.webbookingroom.service.AuthenService;
+import com.example.webbookingroom.service.HotelService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api/v1")
 public class AuthenController {
     private final AuthenService authenService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtilities jwtUtil;
+    private final HotelService hotelService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDTO registerDto) {
@@ -34,5 +35,10 @@ public class AuthenController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
         return authenService.logout(request, response);
+    }
+
+    @PostMapping("/co-register")
+    public ResponseEntity<?> coRegister(@RequestBody CoRegisterDTO coRegisterDTO) {
+        return hotelService.createHotel(coRegisterDTO);
     }
 }

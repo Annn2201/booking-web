@@ -3,24 +3,22 @@ package com.example.webbookingroom.service.impl;
 import com.example.webbookingroom.dto.CoRegisterDTO;
 import com.example.webbookingroom.dto.response.HotelResponse;
 import com.example.webbookingroom.exception.CustomException;
-import com.example.webbookingroom.model.Hotel;
-import com.example.webbookingroom.model.Location;
-import com.example.webbookingroom.model.Role;
-import com.example.webbookingroom.model.User;
-import com.example.webbookingroom.repository.HotelRepository;
-import com.example.webbookingroom.repository.LocationRepository;
-import com.example.webbookingroom.repository.RoleRepository;
-import com.example.webbookingroom.repository.UserRepository;
+import com.example.webbookingroom.model.*;
+import com.example.webbookingroom.repository.*;
 import com.example.webbookingroom.service.HotelService;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -32,6 +30,29 @@ public class HotelServiceImpl implements HotelService {
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
     private final HotelRepository hotelRepository;
+    private final UserHotelRepository userHotelRepository;
+
+    @Override
+    public ResponseEntity<?> findSuitableHotel(String location, String hotelType, int numberOfPeople) {
+        Specification<Hotel> spec = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (Objects.nonNull(location)) {
+                predicates.add(criteriaBuilder.like(root.get("location").get("name"), "%" + location + "%"));
+            }
+            if (Objects.nonNull(hotelType)) {
+                predicates.add(criteriaBuilder.like(root.get("hotelType"), "%" + hotelType + "%"));
+            }
+            predicates.add(criteriaBuilder.equal(root.get("numberOfPeople"), numberOfPeople));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+        List<Hotel> hotels = hotelRepository.findAll(spec);
+        List<Long> hotelIds = new ArrayList<>(hotels.stream().map(Hotel::getId).toList());
+        List<UserHotel> userHotels = userHotelRepository.findAllById(hotelIds);
+        List<Long> userHotelIds = userHotels.stream().map(UserHotel::getUserId).toList();
+        hotelIds.retainAll(userHotelIds);
+        List<>
+
+    }
 
     @Override
     public ResponseEntity<?> createHotel(CoRegisterDTO coRegisterDTO) {
@@ -64,9 +85,9 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public ResponseEntity<?> addHotelToUser(CoRegisterDTO coRegisterDTO, Long userId) {
-        Hotel hotel = new Hotel();
-        BeanUtils.copyProperties(coRegisterDTO, hotel);
+    public ResponseEntity<?> addHotelToCoUser(Long userId, Long hotelId) {
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new CustomException("Không tìm thấy khach san"));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException("Không tìm thấy người dùng"));
         if (Objects.isNull(user)) {

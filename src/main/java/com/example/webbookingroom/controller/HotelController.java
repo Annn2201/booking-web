@@ -1,17 +1,25 @@
 package com.example.webbookingroom.controller;
 
+import com.example.webbookingroom.dto.CoRegisterDTO;
+import com.example.webbookingroom.service.HotelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/hotel")
 public class HotelController {
-    @GetMapping("/hotels")
-    public ResponseEntity<?> findSuitableHotel() {
-        return ResponseEntity.ok("ok");
+    private final HotelService hotelService;
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteHotel(@RequestParam Long id) {
+        return hotelService.deleteHotel(id);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> addHotelToUser(@RequestParam Long hotelId,
+                                            @RequestParam Long userId) {
+        return hotelService.addHotelToCoUser(userId, hotelId);
     }
 }

@@ -1,13 +1,15 @@
 package com.example.webbookingroom.service;
 
 import com.example.webbookingroom.dto.CoRegisterDTO;
-import com.example.webbookingroom.model.Location;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
+
 public interface HotelService {
+    ResponseEntity<?> findSuitableHotel(String location, String hotelType, int numberOfPeople);
     ResponseEntity<?> createHotel(CoRegisterDTO coRegisterDTO);
     ResponseEntity<?> deleteHotel(Long id);
-    ResponseEntity<?> addHotelToUser(CoRegisterDTO coRegisterDTO, Long userId);
+    ResponseEntity<?> addHotelToCoUser(Long userId, Long hotelId);
 
 }
 
