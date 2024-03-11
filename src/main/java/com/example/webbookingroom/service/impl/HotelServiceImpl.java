@@ -2,10 +2,12 @@ package com.example.webbookingroom.service.impl;
 
 import com.example.webbookingroom.dto.CoRegisterDTO;
 import com.example.webbookingroom.dto.response.HotelResponse;
+import com.example.webbookingroom.dto.response.ServerResponse;
 import com.example.webbookingroom.exception.CustomException;
 import com.example.webbookingroom.model.*;
 import com.example.webbookingroom.repository.*;
 import com.example.webbookingroom.service.HotelService;
+import com.example.webbookingroom.util.CommonUtils;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -33,7 +35,14 @@ public class HotelServiceImpl implements HotelService {
     private final UserHotelRepository userHotelRepository;
 
     @Override
-    public ResponseEntity<?> findSuitableHotel(String location, String hotelType, int numberOfPeople) {
+    public ResponseEntity<?> getAllHotel() {
+        List<Hotel> hotels = hotelRepository.findAll();
+        ServerResponse serverResponse = CommonUtils.getResponse(HttpStatus.OK, "Get all hotel successfully", hotels);
+        return ResponseEntity.ok(serverResponse);
+    }
+
+    @Override
+    public ResponseEntity<?> findSuitableHotel(String location, String hotelType, LocalDate checkIn, LocalDate checkOut) {
         Specification<Hotel> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (Objects.nonNull(location)) {
@@ -42,7 +51,7 @@ public class HotelServiceImpl implements HotelService {
             if (Objects.nonNull(hotelType)) {
                 predicates.add(criteriaBuilder.like(root.get("hotelType"), "%" + hotelType + "%"));
             }
-            predicates.add(criteriaBuilder.equal(root.get("numberOfPeople"), numberOfPeople));
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
         List<Hotel> hotels = hotelRepository.findAll(spec);
@@ -50,8 +59,7 @@ public class HotelServiceImpl implements HotelService {
         List<UserHotel> userHotels = userHotelRepository.findAllById(hotelIds);
         List<Long> userHotelIds = userHotels.stream().map(UserHotel::getUserId).toList();
         hotelIds.retainAll(userHotelIds);
-        List<>
-
+        return null;
     }
 
     @Override

@@ -49,7 +49,7 @@ public class VoucherServiceImpl implements VoucherService {
         Page<Voucher> vouchers = voucherRepository.findAll(spec, PageUtil.createPageable(currentPage, LIMIT, SORT));
         String username = jwtUtilities.getUsername(request);
         User user = userRepository.findByUsername(username).orElseThrow(() -> new CustomException("User not found"));
-        List<UserVoucher> userVouchers = userVoucherRepository.findByUserId(user.getId());
+        List<UserVoucher> userVouchers = userVoucherRepository.findByUserId(user.getUserId());
         List<Long> userVoucherIds = getUserVoucherIds(userVouchers);
         List<Voucher> result = getVouchersAvailable(vouchers, userVoucherIds);
         if (result.isEmpty()) {

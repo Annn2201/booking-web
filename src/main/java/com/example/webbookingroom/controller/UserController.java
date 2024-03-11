@@ -23,12 +23,14 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<?> updateUser(HttpServletRequest request, UserDTO userDTO) {
+    public ResponseEntity<?> updateUser(HttpServletRequest request,
+                                        @RequestBody UserDTO userDTO) {
         return userService.updateUserDetail(request, userDTO);
     }
 
     @PostMapping("/user/change-password")
-    public ResponseEntity<?> changePassword(HttpServletRequest request, ChangePasswordDTO changePasswordDTO) {
+    public ResponseEntity<?> changePassword(HttpServletRequest request,
+                                            @RequestBody ChangePasswordDTO changePasswordDTO) {
         return userService.changePassword(request, changePasswordDTO);
     }
 

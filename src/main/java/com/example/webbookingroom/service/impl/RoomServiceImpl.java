@@ -49,6 +49,6 @@ public class RoomServiceImpl implements RoomService {
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new CustomException("Khách san không tìm thấy"));
         List<Room> roomListByHotel = roomRepository.findAllByHotel(hotel);
-        
+        return null;
     }
 }

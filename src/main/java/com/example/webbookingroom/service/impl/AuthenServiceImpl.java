@@ -51,6 +51,7 @@ public class AuthenServiceImpl implements AuthenService {
         user.setLastName(registerDto.getLastName());
         user.setEmail(registerDto.getEmail());
         user.setNumber(registerDto.getNumber());
+        user.setUsername(registerDto.getUsername());
         user.setPassword(encodedPassword);
         user.setIdentifyNumber(registerDto.getIdentifyNumber());
         user.setUserRole(userRoles);
@@ -73,7 +74,7 @@ public class AuthenServiceImpl implements AuthenService {
                 .collect(Collectors.toList());
         JwtResponse response = JwtResponse.builder()
                 .token(jwt)
-                .id(user.getId())
+                .id(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .roles(roles)

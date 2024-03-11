@@ -23,8 +23,8 @@ import java.util.Objects;
 public class User implements Serializable, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "user_id")
+    private Long userId;
     @Basic
     @Column(name = "first_name")
     private String firstName;

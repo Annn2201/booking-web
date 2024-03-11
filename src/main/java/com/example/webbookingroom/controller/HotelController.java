@@ -22,4 +22,9 @@ public class HotelController {
                                             @RequestParam Long userId) {
         return hotelService.addHotelToCoUser(userId, hotelId);
     }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getAllHotel() {
+        return hotelService.getAllHotel();
+    }
 }

@@ -53,10 +53,10 @@ public class JwtUtilities {
     }
     public String getUsername(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
-        if(validateToken(authorizationHeader).equals(false)) {
+        String token = authorizationHeader.substring(7);
+        if(validateToken(token).equals(false)) {
             throw new CustomException("Invalid token");
         };
-        String token = authorizationHeader.substring(7);
         return extractUsername(token);
     }
     public Boolean validateToken(String token) {
