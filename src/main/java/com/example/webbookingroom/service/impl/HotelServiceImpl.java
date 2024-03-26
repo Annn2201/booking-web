@@ -2,6 +2,7 @@ package com.example.webbookingroom.service.impl;
 
 import com.example.webbookingroom.dto.CoRegisterDTO;
 import com.example.webbookingroom.dto.response.HotelResponse;
+import com.example.webbookingroom.dto.response.RoomResponse;
 import com.example.webbookingroom.dto.response.ServerResponse;
 import com.example.webbookingroom.exception.CustomException;
 import com.example.webbookingroom.model.*;
@@ -18,10 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +35,21 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public ResponseEntity<?> getAllHotel() {
         List<Hotel> hotels = hotelRepository.findAll();
-        ServerResponse serverResponse = CommonUtils.getResponse(HttpStatus.OK, "Get all hotel successfully", hotels);
+        List<HotelResponse> hotelResponses = new ArrayList<>();
+        hotels.forEach(hotel -> {
+            HotelResponse hotelResponse = new HotelResponse();
+            BeanUtils.copyProperties(hotel, hotelResponse);
+            List<Image> images = hotel.getImages();
+            List<String> imageUrls = images.stream().map(Image::getImageUrl).toList();
+            List<Room> rooms = hotel.getRooms();
+            rooms.sort(Comparator.comparing(Room::getPrice));
+            hotelResponse.setMinPrice(rooms.get(0).getPrice().toString());
+            hotelResponse.setMaxPrice(rooms.get(rooms.size() - 1).getPrice().toString());
+            hotelResponse.setId(hotel.getId().toString());
+            hotelResponse.setImage(imageUrls.get(0));
+            hotelResponses.add(hotelResponse);
+        });
+        ServerResponse serverResponse = CommonUtils.getResponse(HttpStatus.OK, "Get all hotel successfully", hotelResponses);
         return ResponseEntity.ok(serverResponse);
     }
 
@@ -87,9 +99,23 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public ResponseEntity<?> deleteHotel(Long id) {
-        hotelRepository.deleteById(id);
-        return ResponseEntity.ok("Xóa thanh cong");
+    public ResponseEntity<?> findHotelByHotelName(String name) {
+        Hotel hotel = hotelRepository.findByName(name)
+                .orElseThrow(() -> new CustomException("Không tìm thấy khách san"));
+        HotelResponse hotelResponse = new HotelResponse();
+        BeanUtils.copyProperties(hotel, hotelResponse);
+        List<Image> images = hotel.getImages();
+        List<String> imageUrls = images.stream().map(Image::getImageUrl).toList();
+        hotelResponse.setImage(imageUrls.get(0));
+        ServerResponse serverResponse = CommonUtils.getResponse(HttpStatus.OK, "Get hotel detail successfully", hotelResponse);
+        return ResponseEntity.ok(serverResponse);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteHotel(String id) {
+        hotelRepository.deleteById(Long.parseLong(id));
+        ServerResponse serverResponse = CommonUtils.getResponse(HttpStatus.OK, "Xóa khách sạn thành công", null);
+        return ResponseEntity.ok(serverResponse);
     }
 
     @Override

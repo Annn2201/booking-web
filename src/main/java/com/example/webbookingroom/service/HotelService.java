@@ -9,7 +9,8 @@ public interface HotelService {
     ResponseEntity<?> getAllHotel();
     ResponseEntity<?> findSuitableHotel(String location, String hotelType, LocalDate checkIn, LocalDate checkOut);
     ResponseEntity<?> createHotel(CoRegisterDTO coRegisterDTO);
-    ResponseEntity<?> deleteHotel(Long id);
+    ResponseEntity<?> findHotelByHotelName(String name);
+    ResponseEntity<?> deleteHotel(String id);
     ResponseEntity<?> addHotelToCoUser(Long userId, Long hotelId);
 
 }

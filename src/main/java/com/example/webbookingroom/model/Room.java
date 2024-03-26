@@ -35,13 +35,13 @@ public class Room {
     private String image;
     @Basic
     @Column(name = "price")
-    private float price;
+    private Long price;
     @Basic
     @Column(name = "status")
     private String status;
     @Basic
     @Column(name = "capacity")
-    private int capacity;
+    private Integer capacity;
     @ManyToMany(mappedBy = "rooms")
     private List<Utility> utilities;
     @ManyToMany(mappedBy = "userRoom")

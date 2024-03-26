@@ -1,7 +1,6 @@
 package com.example.webbookingroom.util;
 
 import com.example.webbookingroom.dto.response.ServerResponse;
-import com.example.webbookingroom.model.User;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 
@@ -11,7 +10,7 @@ public class CommonUtils {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setStatus(status);
         serverResponse.setMessage(message);
-        serverResponse.setData(data );
+        serverResponse.setData(data);
         return serverResponse;
     }
 }

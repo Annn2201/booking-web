@@ -21,14 +21,8 @@ public class Hotel {
     @Column(name = "name")
     private String name;
     @Basic
-    @Column(name = "type")
-    private String type;
-    @Basic
     @Column(name = "description")
     private String description;
-    @Basic
-    @Column(name = "image")
-    private String image;
     @Basic
     @Column(name = "address")
     private String address;
@@ -44,5 +38,10 @@ public class Hotel {
     private List<User> users;
     @OneToMany(mappedBy = "hotel")
     private List<Voucher> vouchers;
+    @ManyToOne
+    @JoinColumn(name = "type")
+    private HotelType type;
+    @OneToMany(mappedBy = "hotel")
+    private List<Image> images;
 
 }

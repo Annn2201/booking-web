@@ -9,4 +9,7 @@ public interface UserService {
     ResponseEntity<?> getUserDetail(HttpServletRequest request);
     ResponseEntity<?> updateUserDetail(HttpServletRequest request, UserDTO userDTO);
     ResponseEntity<?> changePassword(HttpServletRequest request, ChangePasswordDTO changePasswordDTO);
+    ResponseEntity<?> getAllCustomer();
+
+    ResponseEntity<?> deleteCustomer(Long id);
 }

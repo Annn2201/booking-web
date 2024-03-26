@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,7 +45,10 @@ public class AuthenServiceImpl implements AuthenService {
             return new ResponseEntity<>("Email already exists", HttpStatus.BAD_REQUEST);
         }
         List<Role> userRoles = new ArrayList<>();
-        userRoles.add(roleRepository.findByRole(registerDto.getRole().toString()).orElseThrow(() -> new CustomException("Role not found")));
+        Role role = roleRepository.findByRole(registerDto.getRole()).orElse(null);
+        if(Objects.isNull(role)) {
+            userRoles.add(roleRepository.findByRole("ROLE_ADMIN").orElse(new Role("ROLE_ADMIN")));
+        }
         String encodedPassword = passwordEncoder.encode(registerDto.getPassword());
         User user = new User();
         user.setFirstName(registerDto.getFirstName());

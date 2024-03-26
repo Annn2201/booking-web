@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
+@CrossOrigin(origins = "*")
 public class UserController {
     private final UserService userService;
     private final AuthenService authenService;
@@ -40,5 +41,15 @@ public class UserController {
                                          @RequestParam(required = false) String hotelName) {
         return voucherService.findVouchers(currentPage, hotelName, request);
 
+    }
+
+    @GetMapping("/customer")
+    public ResponseEntity<?> getCustomer() {
+        return userService.getAllCustomer();
+    }
+
+    @DeleteMapping("/customer/{id}")
+    public ResponseEntity<?> deleteCustomer(@PathVariable Long id) {
+        return userService.deleteCustomer(id);
     }
 }
